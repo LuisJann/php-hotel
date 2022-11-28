@@ -40,6 +40,18 @@ $hotels = [
 
 ];
 
+$filter_hotels = $hotels;
+
+$filter_by_parking = $_GET["parking"] ?? "";
+if ($filter_by_parking === "1") {
+    $temp_Hotels = [];
+    foreach ($filter_hotels as $hotel) {
+        if ($hotel["parking"] === true) {
+            $temp_Hotels[] = $hotel;
+        };
+    };
+    $filter_hotels = $temp_Hotels;
+};
 
 ?>
 <!DOCTYPE html>
@@ -54,25 +66,38 @@ $hotels = [
 </head>
 
 <body>
+    <section class="container">
+        <form action="index.php" method="GET" class="mt-2">
+            <select class="form-select" aria-label="Default select example" name="parking">
+                <option value="">Open this select menu</option>
+                <option value="">Tutti</option>
+                <option value="1">Con parcheggio</option>
+            </select>
+            <div>
+                <button class="btn btn-primary mt-2" type="submit">Filtra</button>
+            </div>
+        </form>
+
+    </section>
     <table class="table">
-        <tr>
-            <th scope="col"></th>
-            <th scope="col">Description</th>
-            <th scope="col">Vote</th>
-            <th scope="col">Distanza dal centro </th>
-            <th scope="col">Parcheggio </th>
-        </tr>
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Vote</th>
+                <th scope="col">Distanza dal centro </th>
+                <th scope="col">Parcheggio </th>
+            </tr>
+        </thead>
         <?php
-        for ($i = 0; $i < count($hotels); $i++) {
-            $this_hotel = $hotels[$i]; ?>
-            <thead>
-            </thead>
+        for ($i = 0; $i < count($filter_hotels); $i++) {
+            $this_hotel = $filter_hotels[$i]; ?>
             <tbody>
                 <tr>
                     <th scope="row"><?php echo $this_hotel["name"] ?></th>
                     <td><?php echo $this_hotel["description"] ?></td>
-                    <td><?php echo "voto: " . $this_hotel["vote"] ?></td>
-                    <td><?php echo "distanza dal centro: " . $this_hotel["distance_to_center"] . "km" ?></td>
+                    <td><?php echo $this_hotel["vote"] ?></td>
+                    <td><?php echo $this_hotel["distance_to_center"] . " km" ?></td>
                     <td><?php if ($this_hotel["parking"] === true) {
                             echo "parcheggio disponibile: SI";
                         } else {
